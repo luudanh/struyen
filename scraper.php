@@ -29,10 +29,10 @@ foreach($tr as $trr){
  
 $noidung = $trr->innertext;
 //$noidung = utf8_encode($noidung);
-if(mb_strlen($noidung) >1000){
+
     $j++;
   scraperwiki::save_sqlite(array('id'),array('id'=> $j.$val->id, 'title'=>$val->title,'url'=> $val->url,'content'=>base64_encode($noidung),'order'=> $j,'num'=>$val->num,'reply'=>$val->reply,'type'=>$val->type));
-}
+
    
 }
 $html->clear();
