@@ -1,26 +1,42 @@
-<?
-// This is a template for a PHP scraper on Morph (https://morph.io)
-// including some code snippets below that you should find helpful
+<?php
+require 'scraperwiki.php';
+require 'scraperwiki/simple_html_dom.php';
 
-// require 'scraperwiki.php';
-// require 'scraperwiki/simple_html_dom.php';
-//
-// // Read in a page
-// $html = scraperwiki::scrape("http://foo.com");
-//
-// // Find something on the page using css selectors
-// $dom = new simple_html_dom();
-// $dom->load($html);
-// print_r($dom->find("table.list"));
-//
-// // Write out to the sqlite database using scraperwiki library
-// scraperwiki::save_sqlite(array('name'), array('name' => 'susan', 'occupation' => 'software developer'));
-//
-// // An arbitrary query against the database
-// scraperwiki::select("* from data where 'name'='peter'")
+scraperwiki::save_var('last_id', 1);
 
-// You don't have to do things with the ScraperWiki library. You can use whatever is installed
-// on Morph for PHP (See https://github.com/openaustralia/morph-docker-php) and all that matters
-// is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
-// has at least a table called data.
+//var_dump(json_decode($json));
+exit();
+$id= scraperwiki::get_var('last_id');
+for($i=$id;$i<3200;$i++){
+$api="https://api.morph.io/luudanh/s-in-s/data.json?key=g7c0INT8tWZAeziAaS3U&query=select%20*%20from%20%27data%27%20limit%20$i,1";
+$json = scraperwiki::scrape($api);
+$src = json_decode($json);
+foreach($src as $val)
+{
+ //var_dump($src);
+ $url = base64_decode($val->url);
+
+//exit;
+ $url = str_replace("vietphrase.com/go/","",$url);
+//exit();
+ $html_content = scraperwiki::scrape($url);
+$html = str_get_html($html_content);
+$data = array();
+$tr =  $html->find("div.postmessage div.t_msgfont");
+$j = 0;
+foreach($tr as $trr){
+ 
+$noidung = $trr->innertext;
+//$noidung = utf8_encode($noidung);
+if(mb_strlen($noidung) >1000){
+    $j++;
+  scraperwiki::save_sqlite(array('id'),array('id'=> $j.$val->id, 'title'=>$val->title,'url'=> $val->url,'content'=>base64_encode($noidung),'order'=> $j,'num'=>$val->num,'reply'=>$val->reply));
+}
+   
+}
+$html->clear();
+unset($html);
+scraperwiki::save_var('last_id', $i);
+}
+} 
 ?>
