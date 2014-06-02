@@ -5,9 +5,10 @@ require 'scraperwiki/simple_html_dom.php';
 scraperwiki::save_var('last_id', 1);
 
 //var_dump(json_decode($json));
-exit();
+//exit();
 $id= scraperwiki::get_var('last_id');
 for($i=$id;$i<3200;$i++){
+ $i--;
 $api="https://api.morph.io/luudanh/s-in-s/data.json?key=g7c0INT8tWZAeziAaS3U&query=select%20*%20from%20%27data%27%20limit%20$i,1";
 $json = scraperwiki::scrape($api);
 $src = json_decode($json);
@@ -36,6 +37,7 @@ if(mb_strlen($noidung) >1000){
 }
 $html->clear();
 unset($html);
+$i++;
 scraperwiki::save_var('last_id', $i);
 }
 } 
