@@ -34,12 +34,14 @@ $noidung = $trr->innertext;
  {
 	  $noidung = $trr->find('div',0)->innertext;
  }
+ echo $noidung;
     $j++;
     $i++;
   scraperwiki::save_sqlite(array('id'),array('id'=> $id,'truyenid'=>$val->id, 'title'=>$val->title,'content'=>base64_encode($noidung),'order'=> $j));
 
-   
+  
 }
+ exit();
 $html->clear();
 unset($html);
 
