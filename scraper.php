@@ -1,6 +1,6 @@
 <?php
 require 'scraperwiki.php';
-require 'scraperwiki/simple_html_dom.php';
+require 'simple_dom.php';
 
 scraperwiki::save_var('last_id', 1);
 
@@ -29,15 +29,20 @@ foreach($tr as $trr){
  
 $noidung = $trr->innertext;
 //$noidung = utf8_encode($noidung);
-
+$noidung = $trr->innertext;
+ if($trr->find('div',0))
+ {
+	  $noidung = $trr->find('div',0)->innertext;
+ }
     $j++;
-  scraperwiki::save_sqlite(array('id'),array('id'=> $j.$val->id, 'title'=>$val->title,'url'=> $val->url,'content'=>base64_encode($noidung),'order'=> $j,'num'=>$val->num,'reply'=>$val->reply,'type'=>$val->type));
+    $i++;
+  scraperwiki::save_sqlite(array('id'),array('id'=> $id,'truyenid'=>$val->id, 'title'=>$val->title,'content'=>base64_encode($noidung),'order'=> $j));
 
    
 }
 $html->clear();
 unset($html);
-$i++;
+
 scraperwiki::save_var('last_id', $i);
 }
 } 
